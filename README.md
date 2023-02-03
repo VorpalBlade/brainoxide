@@ -1,5 +1,7 @@
 # BrainOxide
 
+[ [On crates.io](https://crates.io/crates/brainoxide) ]
+
 An optimizing [Brainfuck] interpreter/compiler-to-C in Rust.
 
 Made as a project to learn Rust. Code is for sure not idiomatic and quite messy
