@@ -1,0 +1,2 @@
+Small reproducer for issue
+[>>+<<-]
