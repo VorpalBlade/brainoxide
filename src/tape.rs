@@ -45,7 +45,8 @@ impl VecTape {
 
     fn ensure_size(&mut self, offset: TapeAddr) -> Result<(), TapeAddrError> {
         let offusize: usize = offset.try_into()?;
-        if cfg!(fuzzing) && offusize > 2usize.pow(20) {
+        #[cfg(fuzzing)]
+        if offusize > 2usize.pow(20) {
             return Err(TapeAddrError::TapeAddrTooLarge);
         }
         if self.data.len() < offusize + 1 {
@@ -202,9 +203,19 @@ mod tests {
         let mut tape = VecTape::new();
         tape.set(2.into(), 5.into());
         assert_eq!(tape.get(2.into()), 5.into());
+        assert_eq!(tape.try_get(2.into()), Ok(5.into()));
         tape.modify(2.into(), 255.into());
         assert_eq!(tape.get(2.into()), 4.into());
         tape.modify(8.into(), 200.into());
         assert_eq!(tape.get(8.into()), 200.into());
+
+        assert_eq!(
+            tape.try_get((-1).into()),
+            Err(crate::TapeAddrError::TapeAddrIsNegative)
+        );
+        assert_eq!(
+            tape.try_set((-1).into(), 200.into()),
+            Err(crate::TapeAddrError::TapeAddrIsNegative)
+        );
     }
 }
