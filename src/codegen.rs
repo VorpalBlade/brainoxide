@@ -134,3 +134,13 @@ fn format_eqn_c(eqn: &Equation) -> String {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::indent;
+
+    #[test]
+    fn test_indent() {
+        assert_eq!(indent(2), "    ");
+    }
+}
