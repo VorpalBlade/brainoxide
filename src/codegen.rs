@@ -15,7 +15,7 @@ use crate::{
 pub fn generate_c(code: &Vec<GenOp>, trace: bool) -> String {
     let mut s: String = "#include <stdint.h>\n#include <stdio.h>\n\n".into();
     s += "static uint8_t tape[100000] = { 0 };\nstatic uint8_t *ptr = &tape[0];\n";
-    s += "static void seek_0(ssize_t off) { while (*ptr) { ptr += off; } }\n\n";
+    s += "static void seek_0(intptr_t off) { while (*ptr) { ptr += off; } }\n\n";
     s += "int main(void) {\n";
     s += generate_c_inner(code, 1, trace).as_str();
     s += "}\n";
