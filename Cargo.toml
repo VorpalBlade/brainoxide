@@ -1,13 +1,13 @@
 [package]
-name = "brainoxide"
-version = "0.1.1"
 authors = ["Arvid Norlander"]
-edition = "2021"
-license = "GPL-3.0-only"
-description = "An optimizing Brainfuck compiler/interpreter"
-repository = "https://github.com/VorpalBlade/brainoxide"
-keywords = ["brainfuck", "esolang", "compiler", "interpreter"]
 categories = ["compilers"]
+description = "An optimizing Brainfuck compiler/interpreter"
+edition = "2021"
+keywords = ["brainfuck", "esolang", "compiler", "interpreter"]
+license = "GPL-3.0-only"
+name = "brainoxide"
+repository = "https://github.com/VorpalBlade/brainoxide"
+version = "0.1.1"
 
 [features]
 default = []
