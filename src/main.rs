@@ -1,8 +1,11 @@
+#[cfg(target_os = "linux")]
+use std::os::linux::fs::MetadataExt;
+
 use std::{
     io::{self, Read},
-    os::linux::fs::MetadataExt,
     path::PathBuf,
 };
+
 use thiserror::Error;
 
 use brainoxide::{
@@ -57,7 +60,12 @@ fn main() -> Result<(), ProgramError> {
     let args = Args::parse();
 
     let mut file = std::fs::File::open(args.input_file)?;
+
+    #[cfg(target_os = "linux")]
     let mut buf = Vec::with_capacity(file.metadata()?.st_size() as usize);
+    #[cfg(not(target_os = "linux"))]
+    let mut buf = Vec::new();
+
     file.read_to_end(&mut buf)?;
 
     let mut ast = parse_source(buf.as_slice())?;
