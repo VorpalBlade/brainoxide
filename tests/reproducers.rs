@@ -1,8 +1,6 @@
 //! This test all the regressions in the regressions directory.
 
-use std::{
-    collections::VecDeque, env, error::Error, io::Read, os::linux::fs::MetadataExt, path::PathBuf,
-};
+use std::{collections::VecDeque, env, error::Error, io::Read, path::PathBuf};
 
 use brainoxide::{
     optimize, parse_source,
@@ -31,7 +29,7 @@ fn find_regressions() -> Result<Vec<PathBuf>, Box<dyn Error>> {
 
 fn load_file(path: &PathBuf) -> Result<Vec<u8>, Box<dyn Error>> {
     let mut file = std::fs::File::open(path)?;
-    let mut buf = Vec::with_capacity(file.metadata()?.st_size() as usize);
+    let mut buf = Vec::new();
     file.read_to_end(&mut buf)?;
     Ok(buf)
 }
