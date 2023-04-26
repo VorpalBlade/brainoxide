@@ -68,11 +68,11 @@ pub fn compare_runs(exec1: &ExecutionState, exec2: &ExecutionState) {
     }
 }
 
-pub fn test_execute(ast: &Vec<GenOp>, input: &mut impl std::io::Read) -> ExecutionState {
+pub fn test_execute(ast: &[GenOp], input: &mut impl std::io::Read) -> ExecutionState {
     let mut instr_count = 0;
     let mut exec = ExecutionState::default();
     exec.result = Some(crate::execute(
-        &ast,
+        ast,
         &mut exec.tape,
         &mut exec.tape_ptr,
         input,

@@ -138,15 +138,14 @@ fn build_ast(tokens: impl Iterator<Item = (usize, Token)>) -> Result<Vec<GenOp>,
                             Token::BeginLoop => parse_stack.push(ParseState::new()),
                             Token::EndLoop => {
                                 let changes_pos = cstate.operations.iter().any(|x| x.changes_pos());
-                                let loop_op;
-                                if changes_pos {
-                                    loop_op = GenOp {
+                                let loop_op = if changes_pos {
+                                    GenOp {
                                         offset: 0.into(),
                                         source_loc: src_offset,
                                         opcode: GeneralOp::UnbalancedLoop {
                                             ops: cstate.operations.clone(),
                                         },
-                                    };
+                                    }
                                 } else {
                                     // This is a balanced loop, extract the basic blocks so we can put it in a simple loop
                                     let mut bbs: Vec<SimpOp> = vec![];
@@ -157,7 +156,7 @@ fn build_ast(tokens: impl Iterator<Item = (usize, Token)>) -> Result<Vec<GenOp>,
                                             unreachable!();
                                         }
                                     }
-                                    loop_op = GenOp {
+                                    GenOp {
                                         offset: 0.into(),
                                         source_loc: src_offset,
                                         opcode: GeneralOp::BasicBlock(SimpleBlock {
@@ -167,8 +166,8 @@ fn build_ast(tokens: impl Iterator<Item = (usize, Token)>) -> Result<Vec<GenOp>,
                                                 opcode: SimpleOp::new_loop(bbs),
                                             }],
                                         }),
-                                    };
-                                }
+                                    }
+                                };
                                 parse_stack.pop().unwrap();
                                 if parse_stack.is_empty() {
                                     return Err(ParseError::TooManyEndLoop);

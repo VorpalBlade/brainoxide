@@ -398,22 +398,19 @@ fn merge_const_outputs(dag: &mut BbDag) {
         let op2 = &dag.graph.node_weight(cur_idx).unwrap().op;
         if let Some(prev_idx) = prev_io {
             let op1 = &dag.graph.node_weight(prev_idx).unwrap().op;
-            match (op1, op2) {
-                (BbDagOp::OutputConst(first), BbDagOp::OutputConst(second)) => {
-                    let combined = Vec::from_iter(first.iter().chain(second.iter()).cloned());
-                    let mut added_nodes = dag.replace_with(
-                        &prev_idx,
-                        vec![BbDagNode {
-                            op: BbDagOp::OutputConst(combined),
-                            offset: 0.into(),
-                        }],
-                    );
-                    // Snip out op2
-                    dag.remove_node(&cur_idx);
-                    assert_eq!(added_nodes.len(), 1);
-                    prev_io = added_nodes.pop();
-                }
-                _ => (),
+            if let (BbDagOp::OutputConst(first), BbDagOp::OutputConst(second)) = (op1, op2) {
+                let combined = Vec::from_iter(first.iter().chain(second.iter()).cloned());
+                let mut added_nodes = dag.replace_with(
+                    &prev_idx,
+                    vec![BbDagNode {
+                        op: BbDagOp::OutputConst(combined),
+                        offset: 0.into(),
+                    }],
+                );
+                // Snip out op2
+                dag.remove_node(&cur_idx);
+                assert_eq!(added_nodes.len(), 1);
+                prev_io = added_nodes.pop();
             }
         }
         cur_io = prev_io;
@@ -463,6 +460,7 @@ pub fn run_bb_passes(
         .map(|(block_idx, op)| match op.opcode {
             GeneralOp::BasicBlock(inner) => {
                 let entry;
+                #[allow(clippy::if_same_then_else)]
                 if block_idx == 0 && is_outermost {
                     entry = EntryType::BeginningOfProgram
                 } else if is_outermost {

@@ -443,7 +443,7 @@ impl BbDag {
             Vec::from_iter(self.live.iter().filter(|(_, v)| **v == *node)).len()
         );
 
-        self.remove_node_maybe_live(&node);
+        self.remove_node_maybe_live(node);
     }
 
     /// Like [remove_node_maybe_live] but allows removing possibly live node.
@@ -742,6 +742,7 @@ impl BbDag {
     }
 
     /// Internal insert implementation, shared between standard insert-at-end and replace functions
+    #[allow(clippy::too_many_arguments)]
     fn advanced_insert(
         graph: &mut BbGraph,
         node: &BbDagNode,
