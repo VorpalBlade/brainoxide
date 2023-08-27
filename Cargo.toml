@@ -7,7 +7,7 @@ keywords = ["brainfuck", "esolang", "compiler", "interpreter"]
 license = "GPL-3.0-only"
 name = "brainoxide"
 repository = "https://github.com/VorpalBlade/brainoxide"
-version = "0.1.1"
+version = "0.1.2"
 
 [features]
 default = []
