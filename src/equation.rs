@@ -118,11 +118,11 @@ impl Equation {
         match self {
             Equation::Mem(addr) => tape.try_get(tape_offset + *addr),
             Equation::Const(n) => Ok(*n),
-            Equation::Mul(vals) => vals.iter().fold(Ok(1.into()), |acc, v| {
-                Ok(acc? * v.evaluate_on_tape(tape, tape_offset)?)
+            Equation::Mul(vals) => vals.iter().try_fold(1.into(), |acc, v| {
+                Ok(acc * v.evaluate_on_tape(tape, tape_offset)?)
             }),
-            Equation::Add(vals) => vals.iter().fold(Ok(0.into()), |acc, v| {
-                Ok(acc? + v.evaluate_on_tape(tape, tape_offset)?)
+            Equation::Add(vals) => vals.iter().try_fold(0.into(), |acc, v| {
+                Ok(acc + v.evaluate_on_tape(tape, tape_offset)?)
             }),
         }
     }
