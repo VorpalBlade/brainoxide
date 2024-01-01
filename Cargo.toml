@@ -18,4 +18,4 @@ default = []
 arbitrary = { version = "1.3", optional = true, features = ["derive"] }
 clap = { version = "4.4.11", features = ["derive", "wrap_help"] }
 petgraph = "0.6.4"
-thiserror = "1.0.51"
+thiserror = "1.0.53"
