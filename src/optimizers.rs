@@ -80,7 +80,7 @@ fn peephole(ops: Vec<GenOp>, is_top_level: bool) -> Vec<GenOp> {
             GeneralOp::Seek { step: _, value: _ } => result.push(gop),
             GeneralOp::UnbalancedLoop { ref ops } => {
                 if ops.len() == 1 {
-                    let iop = ops.get(0).unwrap();
+                    let iop = ops.first().unwrap();
                     match iop.opcode {
                         GeneralOp::Move(n) => result.push(GenOp {
                             offset: gop.offset,
@@ -183,8 +183,8 @@ pub(crate) fn fuse_bbs(ops: Vec<GenOp>) -> Vec<GenOp> {
     let mut bb_acc: Option<SimpleBlock> = None;
     for gop in ops {
         if let GeneralOp::BasicBlock(mut sb) = gop.opcode {
-            if bb_acc.is_some() {
-                bb_acc.as_mut().unwrap().ops.append(&mut sb.ops);
+            if let Some(inner) = bb_acc.as_mut() {
+                inner.ops.append(&mut sb.ops);
             } else {
                 bb_acc = Some(sb);
             }
