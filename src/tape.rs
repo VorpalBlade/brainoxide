@@ -40,7 +40,7 @@ impl VecTape {
     /// Get a length value for the tape.
     ///
     /// All this means is that no value above this address is non-zero.
-    /// It does not guarrantee that there is a non-zero value below this
+    /// It does not guarantee that there is a non-zero value below this
     /// length.
     pub fn len(&self) -> TapeAddr {
         self.data.len().into()

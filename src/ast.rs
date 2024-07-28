@@ -18,7 +18,7 @@ pub trait Opcode: PartialEq + Eq {
 pub enum SimpleOp {
     /// A simple balanced loop
     BalancedLoop { b: SimpleBlock },
-    /// A loop that excutes 0 or 1 times.
+    /// A loop that executes 0 or 1 times.
     If { b: SimpleBlock },
     /// A modification (fused +/- operations)
     Add(BfNum),
@@ -107,7 +107,7 @@ impl Default for SimpleBlock {
 #[cfg_attr(feature = "arbitrary", derive(arbitrary::Arbitrary))]
 pub enum GeneralOp {
     Move(TapeAddr),
-    // Difficult operations, we will loose track of where we are (at least in the general case)
+    // Difficult operations, we will lose track of where we are (at least in the general case)
     Seek { step: TapeAddr, value: BfNum },
     UnbalancedLoop { ops: Vec<Operation<GeneralOp>> },
     // A block with only simple operations, all offsets are known

@@ -38,7 +38,7 @@ fn propagate_entry_conditions(dag: &mut BbDag, entry: EntryType) -> TapeState {
     tape
 }
 
-/// Recrsive implementation of propagating entry conditions
+/// Recursive implementation of propagating entry conditions
 fn propagate_entry_conditions_inner(dag: &mut BbDag, tape: &mut TapeState) {
     for idx in toposort(&dag.graph, None).unwrap().iter() {
         let node = dag.graph.node_weight(*idx).unwrap().clone();
@@ -474,7 +474,7 @@ pub fn run_bb_passes(
                     entry = EntryType::Index0Is0
                 } else if !is_outermost && block_idx > 0 {
                     // SAFETY: Moves are shifted to after basic blocks and BBs
-                    // merged. Thus there was a seek or unbalanced loop before us.
+                    // merged. Thus, there was a seek or unbalanced loop before us.
                     entry = EntryType::Index0Is0
                 } else {
                     entry = EntryType::Unknown

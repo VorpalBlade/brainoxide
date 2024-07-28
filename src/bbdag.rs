@@ -46,7 +46,7 @@ pub enum BbDagEdge {
     /// This edge overwrites such that there is a happens-before relation
     /// Typical example is output followed by changing the output cell.
     ///
-    /// The difference between this and replacing is that Colobbering is
+    /// The difference between this and replacing is that Clobbering is
     /// wrt. readers, while Replacing is wrt. writers.
     Clobbering { addr: TapeAddr, cond: bool },
     /// This edge is an IO ordering edge
@@ -59,7 +59,7 @@ pub enum BbDagOp {
     Beginning,
     /// A simple balanced loop
     Loop(Box<BbDag>),
-    /// An if-statement. We know this code excutes 0 or 1 times.
+    /// An if-statement. We know this code executes 0 or 1 times.
     If(Box<BbDag>),
     /// A modification (fused +/- operations)
     AddConst(BfNum),
@@ -151,36 +151,6 @@ impl BbDagNode {
 }
 
 impl DagProperties for BbDagNode {
-    fn read_offsets(&self) -> HashSet<TapeAddr> {
-        match self.op {
-            BbDagOp::Beginning => HashSet::new(),
-            BbDagOp::Loop(ref body) | BbDagOp::If(ref body) => {
-                let mut offsets = body.read_offsets();
-                offsets.insert(self.offset);
-                offsets
-            }
-            BbDagOp::AddConst(_) => HashSet::from([self.offset]),
-            BbDagOp::Set(_) => HashSet::new(),
-            BbDagOp::Equation(ref eqn) => eqn.offsets(),
-            BbDagOp::Input => HashSet::new(),
-            BbDagOp::Output => HashSet::from([self.offset]),
-            BbDagOp::OutputConst(_) => HashSet::new(),
-        }
-    }
-
-    fn write_offsets(&self) -> HashSet<TapeAddr> {
-        match self.op {
-            BbDagOp::Beginning => HashSet::new(),
-            BbDagOp::Loop(ref body) | BbDagOp::If(ref body) => body.write_offsets(),
-            BbDagOp::AddConst(_) => HashSet::from([self.offset]),
-            BbDagOp::Set(_) => HashSet::from([self.offset]),
-            BbDagOp::Equation(_) => HashSet::from([self.offset]),
-            BbDagOp::Input => HashSet::from([self.offset]),
-            BbDagOp::Output => HashSet::new(),
-            BbDagOp::OutputConst(_) => HashSet::from([]),
-        }
-    }
-
     fn has_body(&self) -> bool {
         match self.op {
             BbDagOp::Beginning => false,
@@ -217,6 +187,36 @@ impl DagProperties for BbDagNode {
             BbDagOp::Loop(ref body) | BbDagOp::If(ref body) => body.has_io(),
             BbDagOp::AddConst(_) | BbDagOp::Set(_) | BbDagOp::Equation(_) => false,
             BbDagOp::Input | BbDagOp::Output | BbDagOp::OutputConst(_) => true,
+        }
+    }
+
+    fn read_offsets(&self) -> HashSet<TapeAddr> {
+        match self.op {
+            BbDagOp::Beginning => HashSet::new(),
+            BbDagOp::Loop(ref body) | BbDagOp::If(ref body) => {
+                let mut offsets = body.read_offsets();
+                offsets.insert(self.offset);
+                offsets
+            }
+            BbDagOp::AddConst(_) => HashSet::from([self.offset]),
+            BbDagOp::Set(_) => HashSet::new(),
+            BbDagOp::Equation(ref eqn) => eqn.offsets(),
+            BbDagOp::Input => HashSet::new(),
+            BbDagOp::Output => HashSet::from([self.offset]),
+            BbDagOp::OutputConst(_) => HashSet::new(),
+        }
+    }
+
+    fn write_offsets(&self) -> HashSet<TapeAddr> {
+        match self.op {
+            BbDagOp::Beginning => HashSet::new(),
+            BbDagOp::Loop(ref body) | BbDagOp::If(ref body) => body.write_offsets(),
+            BbDagOp::AddConst(_) => HashSet::from([self.offset]),
+            BbDagOp::Set(_) => HashSet::from([self.offset]),
+            BbDagOp::Equation(_) => HashSet::from([self.offset]),
+            BbDagOp::Input => HashSet::from([self.offset]),
+            BbDagOp::Output => HashSet::new(),
+            BbDagOp::OutputConst(_) => HashSet::from([]),
         }
     }
 }
@@ -326,7 +326,7 @@ impl NodeLinks {
 
         let mut result = NodeLinks::default();
 
-        // Lets go through the edges
+        // Let's go through the edges
         for e in &incoming_edges {
             match e.weight() {
                 // Dealt with in live set handling
@@ -604,13 +604,13 @@ impl BbDag {
         new_nodes: Vec<BbDagNode>,
     ) -> Vec<BBGraphNode> {
         // 1. Collect data about old node
-        //    * Construct an t_live and t_users set at this point in the graph (based on
+        //    * Construct a t_live and t_users set at this point in the graph (based on
         //      the old node it's parents)
         //    * Construct an old_replaces set
         //    * Construct an old_clobber set
         //    * If the node used to do IO: remember in/out edges
 
-        // Lets build the live set, this must be done recursively following all the
+        // Let's build the live set, this must be done recursively following all the
         // using edges.
         let mut t_live = self.live_at(node);
 
@@ -841,7 +841,7 @@ impl BbDag {
         idx
     }
 
-    /// Build a live set at a specfic node.
+    /// Build a live set at a specific node.
     fn live_at(&self, node: &BBGraphNode) -> LiveMap {
         let mut t_live = LiveMap::new();
 
@@ -963,6 +963,22 @@ impl Default for BbDag {
 }
 
 impl DagProperties for BbDag {
+    fn has_body(&self) -> bool {
+        true
+    }
+
+    fn has_conditional(&self) -> bool {
+        self.graph.node_weights().any(|e| e.has_conditional())
+    }
+
+    fn has_loop(&self) -> bool {
+        self.graph.node_weights().any(|e| e.has_loop())
+    }
+
+    fn has_io(&self) -> bool {
+        self.last_io.is_some()
+    }
+
     fn read_offsets(&self) -> HashSet<TapeAddr> {
         let mut results: HashSet<TapeAddr> = HashSet::new();
         for node in self.graph.node_weights() {
@@ -977,22 +993,6 @@ impl DagProperties for BbDag {
             results.extend(node.write_offsets());
         }
         results
-    }
-
-    fn has_io(&self) -> bool {
-        self.last_io.is_some()
-    }
-
-    fn has_loop(&self) -> bool {
-        self.graph.node_weights().any(|e| e.has_loop())
-    }
-
-    fn has_conditional(&self) -> bool {
-        self.graph.node_weights().any(|e| e.has_conditional())
-    }
-
-    fn has_body(&self) -> bool {
-        true
     }
 }
 

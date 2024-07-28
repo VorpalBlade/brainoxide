@@ -10,7 +10,7 @@ use crate::equation::Equation;
 /// Generate C code
 ///
 /// Tracing turns out adding #line directives that corresponds to the source
-/// position. Currently this corresponds to the character index, not the actual
+/// position. Currently, this corresponds to the character index, not the actual
 /// line.
 pub fn generate_c(code: &Vec<GenOp>, trace: bool) -> String {
     let mut s: String = "#include <stdint.h>\n#include <stdio.h>\n\n".into();

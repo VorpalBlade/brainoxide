@@ -25,7 +25,7 @@ pub enum Equation {
 }
 
 impl Equation {
-    /// Update equation, offseting all memory accesses
+    /// Update equation, offsetting all memory accesses
     ///
     /// Used to reorder with respect to a move instruction
     pub(crate) fn offset(&mut self, offset: TapeAddr) {
@@ -47,7 +47,7 @@ impl Equation {
         offsets
     }
 
-    /// Evaulate on an abstract tape (partial evaluation)
+    /// Evaluate on an abstract tape (partial evaluation)
     pub(crate) fn evaluate_on_abstract_tape(
         &self,
         tape: &impl AbstractTape<TapeProvenance>,
@@ -111,7 +111,7 @@ impl Equation {
         }
     }
 
-    /// Evalute this equation on a tape to get the result.
+    /// Evaluate this equation on a tape to get the result.
     pub(crate) fn evaluate_on_tape(
         &self,
         tape: &impl Tape,
