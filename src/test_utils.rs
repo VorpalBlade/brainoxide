@@ -1,8 +1,10 @@
-use crate::{
-    ast::*,
-    tape::{AbstractTape, VecTape},
-    ExecuteCallbackResult, ExecutionError, TapeAddr, TapeAddrError,
-};
+use crate::ast::*;
+use crate::tape::AbstractTape;
+use crate::tape::VecTape;
+use crate::ExecuteCallbackResult;
+use crate::ExecutionError;
+use crate::TapeAddr;
+use crate::TapeAddrError;
 
 #[derive(Debug, PartialEq)]
 pub struct ExecutionState {

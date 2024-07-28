@@ -1,6 +1,7 @@
 //! Fuzzing helper function
 
-use std::{collections::VecDeque, fmt::Debug};
+use std::collections::VecDeque;
+use std::fmt::Debug;
 
 use brainoxide::ast::GenOp;
 

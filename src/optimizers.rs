@@ -1,15 +1,14 @@
-mod bb_opt;
-
 use std::vec;
 
-use crate::{
-    ast::*,
-    opt_types::EntryType,
-    settings::{BasicBlockOptimisationPass, OptimisationPass},
-    TapeAddr,
-};
+use crate::ast::*;
+use crate::opt_types::EntryType;
+use crate::settings::BasicBlockOptimisationPass;
+use crate::settings::OptimisationPass;
+use crate::TapeAddr;
 
 use self::bb_opt::opt_simple_block;
+
+mod bb_opt;
 
 /// Run optimisation passes.
 pub fn optimize(mut ast: Vec<GenOp>, debug: bool, passes: &[OptimisationPass]) -> Vec<GenOp> {
@@ -215,7 +214,8 @@ pub(crate) fn fuse_bbs(ops: Vec<GenOp>) -> Vec<GenOp> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{ast::*, parse_source};
+    use crate::ast::*;
+    use crate::parse_source;
 
     #[test]
     fn test_shift_moves_to_end() {

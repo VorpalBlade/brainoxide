@@ -1,6 +1,8 @@
 //! Types and functions for the AST.
 
-use crate::{equation::Equation, BfNum, TapeAddr};
+use crate::equation::Equation;
+use crate::BfNum;
+use crate::TapeAddr;
 
 /// Trait for functions all opcodes support.
 pub trait Opcode: PartialEq + Eq {

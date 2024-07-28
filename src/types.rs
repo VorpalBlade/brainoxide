@@ -1,10 +1,14 @@
 //! Fundamental data types used throughout brainoxide
 
-use std::{
-    fmt::Display,
-    num::Wrapping,
-    ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign},
-};
+use std::fmt::Display;
+use std::num::Wrapping;
+use std::ops::Add;
+use std::ops::AddAssign;
+use std::ops::Mul;
+use std::ops::MulAssign;
+use std::ops::Sub;
+use std::ops::SubAssign;
+
 use thiserror::Error;
 
 /// Error type for TapeAddr operations

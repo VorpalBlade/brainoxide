@@ -1,15 +1,20 @@
-use std::{
-    collections::{HashMap, HashSet, VecDeque},
-    iter::once,
-};
+use std::collections::HashMap;
+use std::collections::HashSet;
+use std::collections::VecDeque;
+use std::iter::once;
 
-use crate::{
-    ast::{SimpOp, SimpleBlock, SimpleOp},
-    equation::Equation,
-    opt_types::LoopIter,
-    BfNum, TapeAddr,
-};
-use petgraph::{algo::toposort, dot::Dot, prelude::*, stable_graph::DefaultIx};
+use petgraph::algo::toposort;
+use petgraph::dot::Dot;
+use petgraph::prelude::*;
+use petgraph::stable_graph::DefaultIx;
+
+use crate::ast::SimpOp;
+use crate::ast::SimpleBlock;
+use crate::ast::SimpleOp;
+use crate::equation::Equation;
+use crate::opt_types::LoopIter;
+use crate::BfNum;
+use crate::TapeAddr;
 
 /// Properties of DAG elements and the DAG itself
 pub trait DagProperties {
@@ -35,8 +40,8 @@ pub trait DagProperties {
 pub enum BbDagEdge {
     /// This edge indicate an actual use (read)
     Using { addr: TapeAddr, cond: bool },
-    /// This edge indicates that the previous value is replaced (may or may not be used),
-    /// this is still needed for ordering when converting back.
+    /// This edge indicates that the previous value is replaced (may or may not
+    /// be used), this is still needed for ordering when converting back.
     Replacing { addr: TapeAddr, cond: bool },
     /// This edge overwrites such that there is a happens-before relation
     /// Typical example is output followed by changing the output cell.
@@ -394,7 +399,8 @@ impl NodeLinks {
 pub struct BbDag {
     // The graph representing everything
     pub graph: BbGraph,
-    /// Mapping from offsets to graph index of the node providing the last live value.
+    /// Mapping from offsets to graph index of the node providing the last live
+    /// value.
     pub live: LiveMap,
     /// Mapping from offsets to every node touching that offset.
     pub users: UserMap,
@@ -574,7 +580,8 @@ impl BbDag {
         }
     }
 
-    /// Replace a node with several others. Used by loop unrolling and loop->poly
+    /// Replace a node with several others. Used by loop unrolling and
+    /// loop->poly
     ///
     /// This function has a lot of rules:
     /// 1. You can not expand the read_offsets outside of the dependency graph.
@@ -597,13 +604,14 @@ impl BbDag {
         new_nodes: Vec<BbDagNode>,
     ) -> Vec<BBGraphNode> {
         // 1. Collect data about old node
-        //    * Construct an t_live and t_users set at this point in the graph
-        //      (based on the old node it's parents)
+        //    * Construct an t_live and t_users set at this point in the graph (based on
+        //      the old node it's parents)
         //    * Construct an old_replaces set
         //    * Construct an old_clobber set
         //    * If the node used to do IO: remember in/out edges
 
-        // Lets build the live set, this must be done recursively following all the using edges.
+        // Lets build the live set, this must be done recursively following all the
+        // using edges.
         let mut t_live = self.live_at(node);
 
         let before_state = NodeLinks::create(self, node);
@@ -633,8 +641,8 @@ impl BbDag {
                 &mut t_current_users,
             ));
         }
-        // 5. For the old nodes depending on the removed node, add back the missing edges
-        //    based on data collected during step 3.
+        // 5. For the old nodes depending on the removed node, add back the missing
+        //    edges based on data collected during step 3.
         for (offset, targets) in before_state.out_uses {
             for LinkData {
                 id: u_idx,
@@ -741,7 +749,8 @@ impl BbDag {
         added_nodes
     }
 
-    /// Internal insert implementation, shared between standard insert-at-end and replace functions
+    /// Internal insert implementation, shared between standard insert-at-end
+    /// and replace functions
     #[allow(clippy::too_many_arguments)]
     fn advanced_insert(
         graph: &mut BbGraph,
@@ -837,7 +846,8 @@ impl BbDag {
         let mut t_live = LiveMap::new();
 
         let mut to_visit: VecDeque<_> = self.graph.edges_directed(*node, Incoming).collect();
-        // Handle replacing edges, these do not need to be recursive, so we must handle that first.
+        // Handle replacing edges, these do not need to be recursive, so we must handle
+        // that first.
         for e in &to_visit {
             match e.weight() {
                 // FIXME: Live set needs conditionals too
@@ -1029,12 +1039,12 @@ impl From<Vec<BbDagNode>> for BbDag {
 
 #[cfg(test)]
 mod tests {
+    use crate::ast::*;
+    use crate::optimizers::fuse_bbs;
+    use crate::optimizers::shift_moves_to_end;
+    use crate::parse_source;
+
     use super::*;
-    use crate::{
-        ast::*,
-        optimizers::{fuse_bbs, shift_moves_to_end},
-        parse_source,
-    };
 
     #[test]
     fn test_dag() {

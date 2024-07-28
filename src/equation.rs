@@ -1,13 +1,14 @@
 //! Represents a recursive equation
-use std::{
-    collections::HashSet,
-    ops::{Add, Mul},
-};
+use std::collections::HashSet;
+use std::ops::Add;
+use std::ops::Mul;
 
-use crate::{
-    tape::{AbstractTape, Tape, TapeProvenance},
-    BfNum, TapeAddr, TapeAddrError,
-};
+use crate::tape::AbstractTape;
+use crate::tape::Tape;
+use crate::tape::TapeProvenance;
+use crate::BfNum;
+use crate::TapeAddr;
+use crate::TapeAddrError;
 
 /// An equation, representing a set of fused and lowered BF instructions.
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone)]
@@ -58,7 +59,8 @@ impl Equation {
                 match prov {
                     TapeProvenance::Unknown(_) => self.clone(),
                     TapeProvenance::Exactly(n) => Equation::Const(n),
-                    TapeProvenance::Equation(_) => self.clone(), // TODO: We could maybe inline this. Beware aliasing.
+                    // TODO: We could maybe inline this. Beware aliasing.
+                    TapeProvenance::Equation(_) => self.clone(),
                 }
             }
             a @ Equation::Const(_) => a.clone(),

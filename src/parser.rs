@@ -1,7 +1,10 @@
 use std::vec;
+
 use thiserror::Error;
 
-use crate::{ast::*, BfNum, TapeAddr};
+use crate::ast::*;
+use crate::BfNum;
+use crate::TapeAddr;
 
 /// Tokens in source file
 #[derive(Debug, PartialEq, Clone, Copy)]
@@ -78,8 +81,8 @@ pub enum ParseError {
 
 /// Build AST.
 ///
-/// We already do some optimisation here, specifically collapsing multiple values and moves.
-/// This makes this code a lot more complex.
+/// We already do some optimisation here, specifically collapsing multiple
+/// values and moves. This makes this code a lot more complex.
 fn build_ast(tokens: impl Iterator<Item = (usize, Token)>) -> Result<Vec<GenOp>, ParseError> {
     // This is a stack of parser state. We use a stack to be able to handle loops.
     let mut parse_stack = vec![ParseState::new()];
@@ -147,7 +150,8 @@ fn build_ast(tokens: impl Iterator<Item = (usize, Token)>) -> Result<Vec<GenOp>,
                                         },
                                     }
                                 } else {
-                                    // This is a balanced loop, extract the basic blocks so we can put it in a simple loop
+                                    // This is a balanced loop, extract the basic blocks so we can
+                                    // put it in a simple loop
                                     let mut bbs: Vec<SimpOp> = vec![];
                                     for bb in cstate.operations.clone() {
                                         if let GeneralOp::BasicBlock(sb) = bb.opcode {

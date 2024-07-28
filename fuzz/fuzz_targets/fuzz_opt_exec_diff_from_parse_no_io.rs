@@ -7,10 +7,11 @@
 
 use std::collections::VecDeque;
 
+use brainoxide::parse_source;
+use brainoxide::settings::get_fuzz_optimisations;
+use brainoxide::test_utils::compare_runs;
+use brainoxide::test_utils::test_execute;
 use libfuzzer_sys::fuzz_target;
-
-use brainoxide::test_utils::{compare_runs, test_execute};
-use brainoxide::{parse_source, settings::get_fuzz_optimisations};
 
 fuzz_target!(|data: &[u8]| {
     let res = parse_source(&data);

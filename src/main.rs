@@ -1,19 +1,24 @@
+use std::io::Read;
+use std::io::{self};
 #[cfg(target_os = "linux")]
 use std::os::linux::fs::MetadataExt;
+use std::path::PathBuf;
 
-use std::{
-    io::{self, Read},
-    path::PathBuf,
-};
-
+use clap::Parser;
+use clap::ValueEnum;
 use thiserror::Error;
 
-use brainoxide::{
-    execute, generate_c, optimize, parse_source, settings::get_default_optimisations,
-    tape::VecTape, ExecuteCallbackData, ExecuteCallbackResult, ExecutionError, ParseError,
-    TapeAddr,
-};
-use clap::{Parser, ValueEnum};
+use brainoxide::execute;
+use brainoxide::generate_c;
+use brainoxide::optimize;
+use brainoxide::parse_source;
+use brainoxide::settings::get_default_optimisations;
+use brainoxide::tape::VecTape;
+use brainoxide::ExecuteCallbackData;
+use brainoxide::ExecuteCallbackResult;
+use brainoxide::ExecutionError;
+use brainoxide::ParseError;
+use brainoxide::TapeAddr;
 
 #[derive(Debug, Error)]
 pub enum ProgramError {

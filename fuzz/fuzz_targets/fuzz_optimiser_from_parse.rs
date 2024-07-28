@@ -1,8 +1,9 @@
 #![no_main]
 
+use brainoxide::optimize;
+use brainoxide::parse_source;
+use brainoxide::settings::get_fuzz_optimisations;
 use libfuzzer_sys::fuzz_target;
-
-use brainoxide::{optimize, parse_source, settings::get_fuzz_optimisations};
 
 fuzz_target!(|data: &[u8]| {
     let res = parse_source(data);

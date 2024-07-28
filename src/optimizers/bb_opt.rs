@@ -2,17 +2,22 @@
 
 use std::collections::HashSet;
 
-use petgraph::{algo::toposort, prelude::*};
+use petgraph::algo::toposort;
+use petgraph::prelude::*;
 
-use crate::{
-    ast::*,
-    bbdag::{BbDag, BbDagEdge, BbDagNode, BbDagOp, DagProperties},
-    equation::Equation,
-    opt_types::{EntryType, LoopIter},
-    settings::BasicBlockOptimisationPass,
-    tape::AbstractTape,
-    tape::{TapeProvenance, TapeState},
-};
+use crate::ast::*;
+use crate::bbdag::BbDag;
+use crate::bbdag::BbDagEdge;
+use crate::bbdag::BbDagNode;
+use crate::bbdag::BbDagOp;
+use crate::bbdag::DagProperties;
+use crate::equation::Equation;
+use crate::opt_types::EntryType;
+use crate::opt_types::LoopIter;
+use crate::settings::BasicBlockOptimisationPass;
+use crate::tape::AbstractTape;
+use crate::tape::TapeProvenance;
+use crate::tape::TapeState;
 
 /// Propagate entry conditions for the basic block.
 ///
@@ -180,13 +185,15 @@ fn simplify_loops_inner(dag_node: &mut BbDagNode) -> SimpLoopResult {
         }
     }
 
-    // TODO: We may be able to do better (for constant outputs for example), but then it gets complicated
-    // For example: We should still be able to convert to an if statement.
+    // TODO: We may be able to do better (for constant outputs for example), but
+    // then it gets complicated For example: We should still be able to convert
+    // to an if statement.
     if dag_node.has_io() {
         return SimpLoopResult::KeepLoop;
     }
 
-    // At this point we need to re-do the has_loop check, as we might have collapsed them.
+    // At this point we need to re-do the has_loop check, as we might have collapsed
+    // them.
     if !dag_node.body().unwrap().has_conditional() {
         let loop_idx_offset = dag_node.offset;
         match dag_node.loop_indexing_behaviour().unwrap() {
@@ -227,8 +234,8 @@ fn simplify_loops_inner(dag_node: &mut BbDagNode) -> SimpLoopResult {
                     // To prevent possible accesses before the start of the tape,
                     // we need to make sure to add an if statement around the block if all of:
                     // * We access any index before loop index
-                    // * One of those indices are negative the current tape offset
-                    //   (since the current tape offset must always be valid)
+                    // * One of those indices are negative the current tape offset (since the
+                    //   current tape offset must always be valid)
                     if node.offset < std::cmp::min(loop_idx_offset, 0.into()) {
                         needs_if = true;
                     }
@@ -271,8 +278,8 @@ fn simplify_loops_inner(dag_node: &mut BbDagNode) -> SimpLoopResult {
                             // TODO: Equations. Issue of aliasing with previous loop iterations.
                             failed = true;
                             break;
-                            // Equations need to be wrapped conditionally unless we
-                            // have a top level add with the self offset.
+                            // Equations need to be wrapped conditionally unless
+                            // we have a top level add with the self offset.
                             //if let Equation::Add(ref v) = eqn {
                             //    match v.as_slice() {
                             //        [Equation::Mem(a), Equation::Mem(b)]

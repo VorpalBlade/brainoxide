@@ -2,7 +2,10 @@
 
 use std::collections::HashMap;
 
-use crate::{equation::Equation, BfNum, TapeAddr, TapeAddrError};
+use crate::equation::Equation;
+use crate::BfNum;
+use crate::TapeAddr;
+use crate::TapeAddrError;
 
 /// A trait implementing a tape for some type. This is used for abstract
 /// interpretation in the optimiser.
@@ -152,8 +155,10 @@ impl TapeState {
             default_non_neg: None,
         }
     }
+
     /// Set the default value for non-negative offsets
-    /// Used to evaluate the first basic block where we know the tape to be all zero.
+    /// Used to evaluate the first basic block where we know the tape to be all
+    /// zero.
     pub fn set_default_non_negative(&mut self, default: TapeProvenance) {
         self.default_non_neg = Some(default);
     }
@@ -196,7 +201,9 @@ impl AbstractTape<TapeProvenance> for TapeState {
 
 #[cfg(test)]
 mod tests {
-    use super::{AbstractTape, Tape, VecTape};
+    use super::AbstractTape;
+    use super::Tape;
+    use super::VecTape;
 
     #[test]
     fn test_vec_tape() {

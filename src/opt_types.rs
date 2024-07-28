@@ -9,7 +9,8 @@ pub(crate) enum LoopIter {
     Unknown,
     /// Loop index is *set* to zero during loop. This is an if-statement
     SingleIteration,
-    /// We know that the loop index never reaches zero (not touched, or set to non-zero)
+    /// We know that the loop index never reaches zero (not touched, or set to
+    /// non-zero)
     ///
     /// If the loop is entered, it will never exit
     Infinite,
@@ -22,7 +23,8 @@ pub(crate) enum LoopIter {
 pub(crate) enum EntryType {
     /// We are at the start of the program, everything is known to be 0
     BeginningOfProgram,
-    /// Last basic block in program, at top level, with no unbalanced loop after it.
+    /// Last basic block in program, at top level, with no unbalanced loop after
+    /// it.
     EndOfProgram,
     /// After the end of an unbalanced loop or seek, we know that tape
     /// offset 0 is zero.

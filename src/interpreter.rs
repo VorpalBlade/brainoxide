@@ -1,8 +1,12 @@
-use std::io::{Read, Write};
+use std::io::Read;
+use std::io::Write;
 
-use crate::tape::Tape;
-use crate::{ast::*, TapeAddr, TapeAddrError};
 use thiserror::Error;
+
+use crate::ast::*;
+use crate::tape::Tape;
+use crate::TapeAddr;
+use crate::TapeAddrError;
 
 /// Error type for execution
 #[derive(Debug, Error)]
@@ -166,9 +170,13 @@ where
 mod tests {
     use std::collections::VecDeque;
 
-    use super::{execute, ExecuteCallbackResult};
-    use crate::tape::{AbstractTape, VecTape};
-    use crate::{parse_source, TapeAddr};
+    use crate::parse_source;
+    use crate::tape::AbstractTape;
+    use crate::tape::VecTape;
+    use crate::TapeAddr;
+
+    use super::execute;
+    use super::ExecuteCallbackResult;
 
     #[test]
     fn test_execute() {

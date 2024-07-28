@@ -1,8 +1,8 @@
 #![no_main]
 
+use brainoxide::parse_source;
+use brainoxide::ParseError;
 use libfuzzer_sys::fuzz_target;
-
-use brainoxide::{parse_source, ParseError};
 
 fn check_loop_balance(data: &[u8]) -> Option<ParseError> {
     let loop_counts = data.iter().filter_map(|v| match v {

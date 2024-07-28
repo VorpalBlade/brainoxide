@@ -1,12 +1,16 @@
 //! This test all the regressions in the regressions directory.
 
-use std::{collections::VecDeque, env, error::Error, io::Read, path::PathBuf};
+use std::collections::VecDeque;
+use std::env;
+use std::error::Error;
+use std::io::Read;
+use std::path::PathBuf;
 
-use brainoxide::{
-    optimize, parse_source,
-    settings::get_fuzz_optimisations,
-    test_utils::{compare_tapes, test_execute},
-};
+use brainoxide::optimize;
+use brainoxide::parse_source;
+use brainoxide::settings::get_fuzz_optimisations;
+use brainoxide::test_utils::compare_tapes;
+use brainoxide::test_utils::test_execute;
 
 fn find_regressions() -> Result<Vec<PathBuf>, Box<dyn Error>> {
     let mut path: PathBuf = env::var("CARGO_MANIFEST_DIR")?.into();

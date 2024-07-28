@@ -1,9 +1,12 @@
 #![no_main]
 
+use brainoxide::execute;
+use brainoxide::tape::VecTape;
+use brainoxide::ExecuteCallbackResult;
+use brainoxide::ExecutionError;
+use brainoxide::TapeAddr;
 use brainoxide_fuzz::FuzzInputAST;
 use libfuzzer_sys::fuzz_target;
-
-use brainoxide::{execute, tape::VecTape, ExecuteCallbackResult, ExecutionError, TapeAddr};
 
 fuzz_target!(|data: FuzzInputAST| {
     let ast = data.ast;
