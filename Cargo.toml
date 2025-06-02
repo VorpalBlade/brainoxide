@@ -17,7 +17,7 @@ default = []
 
 [dependencies]
 arbitrary = { version = "1.4", optional = true, features = ["derive"] }
-clap = { version = "4.5.38", features = ["derive", "wrap_help"] }
+clap = { version = "4.5.39", features = ["derive", "wrap_help"] }
 petgraph = "0.8.1"
 thiserror = "2.0.12"
 
