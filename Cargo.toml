@@ -19,7 +19,7 @@ default = []
 arbitrary = { version = "1.4", optional = true, features = ["derive"] }
 clap = { version = "4.5.48", features = ["derive", "wrap_help"] }
 petgraph = "0.8.2"
-thiserror = "2.0.16"
+thiserror = "2.0.17"
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(fuzzing)'] }
