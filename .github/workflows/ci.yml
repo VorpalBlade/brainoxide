@@ -58,6 +58,8 @@ jobs:
             os: windows-latest
           - target: x86_64-apple-darwin
             os: macos-latest
+          - target: aarch64-apple-darwin
+            os: macos-latest
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
@@ -65,8 +67,8 @@ jobs:
       - name: Install Rust
         run: |
           rustup install --no-self-update --profile minimal stable
-          rustup target add ${{ matrix.target }}
           rustup default stable
+          rustup target add ${{ matrix.target }}
       - name: Cache builds
         uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1 # v2.8.1
       - name: Compile and test
